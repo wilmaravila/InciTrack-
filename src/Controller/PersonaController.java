@@ -13,6 +13,7 @@ import Models.Persona;
 import Models.Usuario;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -68,6 +69,11 @@ public class PersonaController {
     }
     
     public void addUser(Persona persona){
+        if(persona.getCorreo().length() < 1 || persona.getCorreo().length() > 250 || 
+                persona.getNombre().length() < 1 || persona.getNombre().length() > 50 || 
+                persona.getNumeroDocumento() < 10000000 || persona.getNumeroDocumento() > 999999999  ){
+            JOptionPane.showMessageDialog(null, "Valida los valores ingresados.");
+        }
         Integer usuarioID = usuarioDao.crearUsuario(new Usuario(persona.getUsuario().getUsername(), persona.getUsuario().getPassword()));
         persona.getUsuario().setId(usuarioID);
         personaDao.crearPersona(persona);

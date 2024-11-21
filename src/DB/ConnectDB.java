@@ -21,10 +21,10 @@ public class ConnectDB {
     private ConnectDB(){
         String host = "localhost";
         String puerto = "3306";
-        String nameDB = "InciTrack ";
+        String nameDB = "InciTrack";
         
-        String usuario = "InciTrack ";
-        String password = "Fw200310.";
+        String usuario = "inci";
+        String password = "inci_123";
         
         String driver = "com.mysql.cj.jdbc.Driver";
         

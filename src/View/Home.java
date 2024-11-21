@@ -5,7 +5,10 @@
  */
 package View;
 
+import Controller.EstadisticasController;
+import Controller.IncidenteController;
 import Controller.PersonaController;
+import Models.Incidente;
 import Models.Persona;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +21,7 @@ public class Home extends javax.swing.JFrame {
 
     private Persona persona;
     private PersonaController personaC; 
+    private IncidenteController incidenteC;
     
     
     /**
@@ -31,9 +35,12 @@ public class Home extends javax.swing.JFrame {
     public Home(Persona persona) {
         this.persona = persona;
         this.personaC = new PersonaController();
+        this.incidenteC = new IncidenteController();
         initComponents();
+        setEstadisticas();
         setUser();
-        initTable(personaC.getPersonas());
+        initTableUsers(personaC.getPersonas());
+        initTableIncidents(incidenteC.getIncidentes());
     }
 
     public void setUser(){
@@ -42,13 +49,31 @@ public class Home extends javax.swing.JFrame {
         txtEmail.setText(persona.getCorreo());
     }
     
+    public void setEstadisticas(){
+        int totalDB = incidenteC.getIncidentes().size();
+        total.setText(incidenteC.getIncidentes().size()+"");
+        altura.setText(incidenteC.getIncidenteByType("Caídas de altura").size()+"");
+        atrapamiento.setText(incidenteC.getIncidenteByType("Atrapamientos").size()+"");
+        corte.setText(incidenteC.getIncidenteByType("Cortes y laceraciones").size()+"");
+        descargas.setText(incidenteC.getIncidenteByType("Descargas eléctricas").size()+"");
+        golpe.setText(incidenteC.getIncidenteByType("Golpes por objetos").size()+"");
+        quemaduras.setText(incidenteC.getIncidenteByType("Quemaduras").size()+"");
+        
+        alturaPer.setText(EstadisticasController.getPorcen(totalDB, Integer.parseInt(altura.getText()))+"%");
+        atrapamientosPer.setText(EstadisticasController.getPorcen(totalDB, Integer.parseInt(atrapamiento.getText()))+"%");
+        cortesPer.setText(EstadisticasController.getPorcen(totalDB, Integer.parseInt(corte.getText()))+"%");
+        descargarPer.setText(EstadisticasController.getPorcen(totalDB, Integer.parseInt(descargas.getText()))+"%");
+        golpesPer.setText(EstadisticasController.getPorcen(totalDB, Integer.parseInt(golpe.getText()))+"%");
+        quemadurasPer.setText(EstadisticasController.getPorcen(totalDB, Integer.parseInt(quemaduras.getText()))+"%");
+    }
+    
     public void updateTable(){
         List<Persona> personas = personaC.getPersonas();
-        initTable(personas);
+        initTableUsers(personas);
         System.out.println("hola");
     }
     
-    public void initTable(List<Persona> personas){
+    public void initTableUsers(List<Persona> personas){
         
         List<String> titles = List.of("Id", "Nombre", "Apellido", "Tipo", "Documento", "Correo", "Genero" );
         DefaultTableModel dtm = new DefaultTableModel();
@@ -67,7 +92,27 @@ public class Home extends javax.swing.JFrame {
             dtm.addRow(row);
         }
         
-        tableUsers.setModel(dtm);
+        usuariosTable.setModel(dtm);
+    }
+    
+    public void initTableIncidents(List<Incidente> incidentes){
+        
+        List<String> titles = List.of("Id", "Tipo", "Descripcion", "Perona", "Fecha Reporte");
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.setColumnIdentifiers(titles.toArray());
+        
+        for(Incidente incidente : incidentes){
+            Object[] row = {
+                incidente.getId(),
+                incidente.getTipo(),
+                incidente.getDescripcion(),
+                incidente.getPersona().getNombre(),
+                incidente.getFechaReporte()
+            };
+            dtm.addRow(row);
+        }
+        
+        incidentesTable.setModel(dtm);
     }
     
     /**
@@ -91,20 +136,55 @@ public class Home extends javax.swing.JFrame {
         txtName = new javax.swing.JLabel();
         txtLast = new javax.swing.JLabel();
         txtEmail = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        tabbed = new javax.swing.JTabbedPane();
+        personasTab = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableUsers = new javax.swing.JTable();
-        jLabel8 = new javax.swing.JLabel();
+        usuariosTable = new javax.swing.JTable();
         searchInput = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        incidentesTab = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        incidentesTable = new javax.swing.JTable();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jButton8 = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        estadisticasTab = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jButton7 = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        total = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        altura = new javax.swing.JLabel();
+        golpe = new javax.swing.JLabel();
+        corte = new javax.swing.JLabel();
+        atrapamiento = new javax.swing.JLabel();
+        quemaduras = new javax.swing.JLabel();
+        descargas = new javax.swing.JLabel();
+        alturaPer = new javax.swing.JLabel();
+        golpesPer = new javax.swing.JLabel();
+        cortesPer = new javax.swing.JLabel();
+        atrapamientosPer = new javax.swing.JLabel();
+        quemadurasPer = new javax.swing.JLabel();
+        descargarPer = new javax.swing.JLabel();
+        meses = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel20 = new javax.swing.JLabel();
+        promedio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -124,7 +204,8 @@ public class Home extends javax.swing.JFrame {
 
         jButton3.setBackground(new java.awt.Color(204, 51, 255));
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton3.setText("Lista de incidentes.");
+        jButton3.setText("Usuarios.");
+        jButton3.setToolTipText("");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -133,7 +214,7 @@ public class Home extends javax.swing.JFrame {
 
         jButton4.setBackground(new java.awt.Color(204, 51, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton4.setText("Configuración.");
+        jButton4.setText("Lista de incidentes.");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -142,7 +223,7 @@ public class Home extends javax.swing.JFrame {
 
         jButton6.setBackground(new java.awt.Color(204, 51, 255));
         jButton6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton6.setText("Cerrar sesión.");
+        jButton6.setText("Estadisticas.");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -153,6 +234,7 @@ public class Home extends javax.swing.JFrame {
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("InciTrack ");
 
@@ -171,41 +253,40 @@ public class Home extends javax.swing.JFrame {
             .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(129, 129, 129)
+                .addComponent(jLabel3)
+                .addGap(0, 130, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(34, 34, 34))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
+                        .addGap(109, 109, 109)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(113, 113, 113)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtLast)
                             .addComponent(txtName)
-                            .addComponent(txtEmail)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(129, 129, 129)
-                        .addComponent(jLabel3)))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 38, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(86, 86, 86))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
-                        .addGap(34, 34, 34))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                            .addComponent(txtEmail))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addComponent(jLabel4)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtName)
                 .addGap(0, 0, 0)
                 .addComponent(txtLast)
@@ -213,27 +294,53 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(txtEmail)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addGap(8, 8, 8))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 290, -1));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 290, 460));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("<html>   <p style=\"text-align:center\"> Administrador usuarios con incidentes. </p> </html>");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, 520, 50));
+
+        tabbed.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+
+        usuariosTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(usuariosTable);
+
+        searchButton.setText("Buscar");
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchButtonMouseClicked(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(204, 153, 255));
         jPanel2.setForeground(new java.awt.Color(204, 102, 255));
+        jPanel2.setMaximumSize(new java.awt.Dimension(556, 66));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel5.setText("Lista de personas con incidentes");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 290, -1));
+        jLabel7.setText("#");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 50, 10, -1));
 
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/floppy-disk-solid.png"))); // NOI18N
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -246,46 +353,54 @@ public class Home extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, 46, 52));
+        jPanel2.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 10, -1, -1));
 
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/trash-solid.png"))); // NOI18N
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 10, 46, 52));
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setText("Personas");
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
 
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/arrows-rotate-solid.png"))); // NOI18N
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 10, 46, 52));
+        jLabel8.setText("Buscar usuario:");
 
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/user-pen-solid.png"))); // NOI18N
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 10, 46, 52));
+        javax.swing.GroupLayout personasTabLayout = new javax.swing.GroupLayout(personasTab);
+        personasTab.setLayout(personasTabLayout);
+        personasTabLayout.setHorizontalGroup(
+            personasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(personasTabLayout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
+                .addComponent(searchInput, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(personasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(personasTabLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        personasTabLayout.setVerticalGroup(
+            personasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(personasTabLayout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(personasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(searchButton))
+                .addContainerGap(312, Short.MAX_VALUE))
+            .addGroup(personasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personasTabLayout.createSequentialGroup()
+                    .addContainerGap(112, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(21, Short.MAX_VALUE)))
+        );
 
-        jLabel6.setText("Total personas con incidentes:");
-        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
+        tabbed.addTab("tab4", personasTab);
 
-        jLabel7.setText("#");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 50, 10, -1));
-
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(278, 62, 640, 80));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("<html>   <p style=\"text-align:center\"> Administrador usuarios con incidentes. </p> </html>");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, 520, 50));
-
-        tableUsers.setModel(new javax.swing.table.DefaultTableModel(
+        incidentesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -296,21 +411,253 @@ public class Home extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane1.setViewportView(tableUsers);
+        jScrollPane2.setViewportView(incidentesTable);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(302, 194, 610, 250));
+        jPanel7.setBackground(new java.awt.Color(204, 153, 255));
+        jPanel7.setForeground(new java.awt.Color(204, 102, 255));
+        jPanel7.setMaximumSize(new java.awt.Dimension(556, 66));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel8.setText("Buscar usuario:");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 160, -1, -1));
-        getContentPane().add(searchInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, 410, -1));
+        jLabel12.setText("#");
+        jPanel7.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 50, 10, -1));
 
-        searchButton.setText("Buscar");
-        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/floppy-disk-solid.png"))); // NOI18N
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                searchButtonMouseClicked(evt);
+                jButton8createUser(evt);
             }
         });
-        getContentPane().add(searchButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 160, 110, -1));
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        jPanel7.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 10, -1, -1));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel13.setText("Incidentes");
+        jPanel7.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+
+        javax.swing.GroupLayout incidentesTabLayout = new javax.swing.GroupLayout(incidentesTab);
+        incidentesTab.setLayout(incidentesTabLayout);
+        incidentesTabLayout.setHorizontalGroup(
+            incidentesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+            .addGroup(incidentesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(incidentesTabLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        incidentesTabLayout.setVerticalGroup(
+            incidentesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(incidentesTabLayout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 346, Short.MAX_VALUE))
+            .addGroup(incidentesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, incidentesTabLayout.createSequentialGroup()
+                    .addContainerGap(78, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        tabbed.addTab("tab4", incidentesTab);
+
+        jPanel6.setBackground(new java.awt.Color(204, 153, 255));
+        jPanel6.setForeground(new java.awt.Color(204, 102, 255));
+        jPanel6.setMaximumSize(new java.awt.Dimension(556, 66));
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/floppy-disk-solid.png"))); // NOI18N
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton7createUser(evt);
+            }
+        });
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel6.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 10, -1, -1));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel11.setText("Estadisticas");
+        jPanel6.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+
+        jLabel5.setText("Total incidentes reportados:");
+
+        total.setText("0");
+
+        jLabel6.setText("Total incidentes reportados por tipo:");
+
+        jLabel10.setText("Caídas de altura:");
+
+        jLabel14.setText("Golpes por objetos:");
+
+        jLabel15.setText("Cortes y laceraciones:");
+
+        jLabel16.setText("Atrapamientos:");
+
+        jLabel17.setText("Quemaduras:");
+
+        jLabel18.setText("Descargas eléctricas:");
+
+        altura.setText("0");
+
+        golpe.setText("0");
+
+        corte.setText("0");
+
+        atrapamiento.setText("0");
+
+        quemaduras.setText("0");
+
+        descargas.setText("0");
+
+        alturaPer.setText("0");
+
+        golpesPer.setText("0");
+
+        cortesPer.setText("0");
+
+        atrapamientosPer.setText("0");
+
+        quemadurasPer.setText("0");
+
+        descargarPer.setText("0");
+
+        jLabel19.setText("Meses a evaluar:");
+
+        jButton1.setText("Buscar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel20.setText("Porcentaje del mes evaluado:");
+
+        promedio.setText("0");
+
+        javax.swing.GroupLayout estadisticasTabLayout = new javax.swing.GroupLayout(estadisticasTab);
+        estadisticasTab.setLayout(estadisticasTabLayout);
+        estadisticasTabLayout.setHorizontalGroup(
+            estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(estadisticasTabLayout.createSequentialGroup()
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(promedio))
+                    .addGroup(estadisticasTabLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                                .addComponent(altura)
+                                .addGap(18, 18, 18)
+                                .addComponent(alturaPer))
+                            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                                .addComponent(golpe)
+                                .addGap(18, 18, 18)
+                                .addComponent(golpesPer))
+                            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                                .addComponent(corte)
+                                .addGap(18, 18, 18)
+                                .addComponent(cortesPer))
+                            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                                .addComponent(atrapamiento)
+                                .addGap(18, 18, 18)
+                                .addComponent(atrapamientosPer))
+                            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                                .addComponent(quemaduras)
+                                .addGap(18, 18, 18)
+                                .addComponent(quemadurasPer))
+                            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                                .addComponent(descargas)
+                                .addGap(18, 18, 18)
+                                .addComponent(descargarPer))))
+                    .addComponent(jLabel6)
+                    .addGroup(estadisticasTabLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(31, 31, 31)
+                        .addComponent(total))
+                    .addComponent(jLabel19)
+                    .addGroup(estadisticasTabLayout.createSequentialGroup()
+                        .addComponent(meses, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        estadisticasTabLayout.setVerticalGroup(
+            estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(estadisticasTabLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(total))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(altura)
+                    .addComponent(alturaPer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(golpe)
+                    .addComponent(golpesPer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(corte)
+                    .addComponent(cortesPer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(atrapamiento)
+                    .addComponent(atrapamientosPer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(quemaduras)
+                    .addComponent(quemadurasPer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(descargas)
+                    .addComponent(descargarPer))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(meses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(estadisticasTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(promedio))
+                .addContainerGap(32, Short.MAX_VALUE))
+        );
+
+        tabbed.addTab("tab4", estadisticasTab);
+
+        getContentPane().add(tabbed, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 50, 670, 410));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -320,28 +667,16 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        tabbed.setSelectedIndex(0);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        tabbed.setSelectedIndex(1);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        tabbed.setSelectedIndex(2);
     }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton9ActionPerformed
-
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton8ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
@@ -350,7 +685,7 @@ public class Home extends javax.swing.JFrame {
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
         if(searchInput != null && searchInput.getText() != null){
             List<Persona> personasSearch = personaC.getSimilarPersons(searchInput.getText());
-            initTable(personasSearch);
+            initTableUsers(personasSearch);
         }
     }//GEN-LAST:event_searchButtonMouseClicked
 
@@ -359,6 +694,28 @@ public class Home extends javax.swing.JFrame {
         CreateUser createU = new CreateUser(this, personaC);
         createU.setVisible(true);
     }//GEN-LAST:event_createUser
+
+    private void jButton7createUser(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7createUser
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7createUser
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8createUser(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8createUser
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8createUser
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String mesesI = meses.getText();
+        Float res = EstadisticasController.getPorcen(incidenteC.getIncidentes().size(), incidenteC.getIncidenteByDate(Integer.parseInt(mesesI)).size());
+        promedio.setText(res+"%");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -403,6 +760,20 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel altura;
+    private javax.swing.JLabel alturaPer;
+    private javax.swing.JLabel atrapamiento;
+    private javax.swing.JLabel atrapamientosPer;
+    private javax.swing.JLabel corte;
+    private javax.swing.JLabel cortesPer;
+    private javax.swing.JLabel descargarPer;
+    private javax.swing.JLabel descargas;
+    private javax.swing.JPanel estadisticasTab;
+    private javax.swing.JLabel golpe;
+    private javax.swing.JLabel golpesPer;
+    private javax.swing.JPanel incidentesTab;
+    private javax.swing.JTable incidentesTable;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -410,24 +781,45 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField meses;
+    private javax.swing.JPanel personasTab;
+    private javax.swing.JLabel promedio;
+    private javax.swing.JLabel quemaduras;
+    private javax.swing.JLabel quemadurasPer;
     private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchInput;
-    private javax.swing.JTable tableUsers;
+    private javax.swing.JTabbedPane tabbed;
+    private javax.swing.JLabel total;
     private javax.swing.JLabel txtEmail;
     private javax.swing.JLabel txtLast;
     private javax.swing.JLabel txtName;
+    private javax.swing.JTable usuariosTable;
     // End of variables declaration//GEN-END:variables
 }
