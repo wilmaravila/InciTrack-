@@ -11,6 +11,7 @@ import Controller.PersonaController;
 import Models.Incidente;
 import Models.Persona;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -97,7 +98,7 @@ public class Home extends javax.swing.JFrame {
     
     public void initTableIncidents(List<Incidente> incidentes){
         
-        List<String> titles = List.of("Id", "Tipo", "Descripcion", "Perona", "Fecha Reporte");
+        List<String> titles = List.of("Id", "Tipo", "Descripcion", "Persona", "Fecha Reporte");
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setColumnIdentifiers(titles.toArray());
         
@@ -708,7 +709,9 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8createUser
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
+        JFrame create = new Create(this);
+        this.setVisible(false);
+        create.setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
